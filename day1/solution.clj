@@ -8,16 +8,17 @@
              (str/split $ #"\n\n")
              (map #(str/split % #"\n") $)))
 
+(def totals (map #(reduce (fn [total current] (+ (parse-int total) (parse-int current))) 0 %) input))
+
 (defn part-1 []
-  (apply max (map #(reduce (fn [total current] (+ (parse-int total) (parse-int current))) 0 %) input)))
+  (apply max totals))
 
 (defn part-2 []
-  (let [totals (map #(reduce (fn [total current] (+ (parse-int total) (parse-int current))) 0 %) input)]
-    (->> totals
-         sort
-         reverse
-         (take 3)
-         (apply +))))
+  (->> totals
+       sort
+       reverse
+       (take 3)
+       (apply +)))
 
 
 (comment 
