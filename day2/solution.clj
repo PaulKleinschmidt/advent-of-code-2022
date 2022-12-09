@@ -1,6 +1,6 @@
 (ns day2.solution
-  (:require [clojure.string :as str])
-  (:require [clojure.set :as set]))
+  (:require [clojure.set :as set]
+            [clojure.string :as str]))
 
 (def input (as-> (slurp "day2/input.txt") $
              (str/split $ #"\n")))
@@ -45,8 +45,7 @@
                               (str (get current 0))
                               points)) 0 input))
 
-;; Inverting winning hands map to get map of winning hands 
-;; keyed by opponents hand
+;; Inverting winning hands map to get map of winning opponent hands
 (def opponent-losing-hands (set/map-invert winning-hands))
 (def opponent-draw-hands (set/map-invert draw-hands))
 (def opponent-winning-hands {"A" "Z"
