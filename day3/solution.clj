@@ -1,8 +1,8 @@
 (ns day3.solution
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [utils :refer [parse-file]]))
 
-(def input (as-> (slurp "day3/input.txt") $
-             (str/split $ #"\n")))
+(def input (parse-file "day3/input.txt"))
 
 (defn find-first
   [f coll]
