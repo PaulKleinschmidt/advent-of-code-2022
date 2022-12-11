@@ -29,7 +29,20 @@
                   repeated-item (find-first #(str/includes? comp-2 %) (str/split comp-1 #""))]
               (+ (get-points repeated-item) total))) 0 input))
 
+(def elf-groups (partition 3 input))
+
+(defn part-2
+  []
+  (reduce (fn [total current]
+            (let [elf-1 (nth current 0)
+                  elf-2 (nth current 1)
+                  elf-3 (nth current 2)
+                  ;; Find character that is in every group
+                  shared-item (find-first #(and (str/includes? elf-2 %) (str/includes? elf-3 %)) (str/split elf-1 #""))]
+             (+ (get-points shared-item) total))) 0 elf-groups))
+
 
 (comment 
   (part-1) ;; 8493
+  (part-2) ;; 2552
   )
