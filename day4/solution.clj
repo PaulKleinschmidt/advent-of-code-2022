@@ -1,5 +1,6 @@
 (ns day4.solution
   (:require [clojure.string :as str]
+            [clojure.set :as set]
             [utils :refer [parse-file]]))
 
 (def input (parse-file "day4/input.txt"))
@@ -25,6 +26,22 @@
               (get {false 0 true 1})
               (+ total))) 0 input))
 
-(comment 
+(defn intersects? [sections]
+  (let [x (set (first sections))
+        y (set (last sections))]
+    (not (empty? (set/intersection x y)))))
+
+(defn part-2
+  []
+  (reduce (fn [total current]
+            (->> (str/split current #",")
+                 (map #(str/split % #"-"))
+                 (map inclusive-range)
+                 (intersects?)
+                 (get {false 0 true 1})
+                 (+ total))) 0 input))
+
+(comment
   (part-1) ;; 511
+  (part-2) ;; 821
   )
