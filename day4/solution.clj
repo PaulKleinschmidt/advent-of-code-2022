@@ -4,11 +4,11 @@
 
 (def input (parse-file "day4/input.txt"))
 
-(def get-range (fn [arr]
+(def inclusive-range (fn [arr]
                  (vec (range (Integer/parseInt (get arr 0))
                              (+ 1 (Integer/parseInt (get arr 1)))))))
 
-;; Accepts two arrays, returns true if one of the arrays fully contains the other
+;; Takes two arrays, returns true if one of the arrays fully contains the other
 (defn fully-contians? [sections]
   (let [x (first sections)
         y (last sections)]
@@ -20,7 +20,7 @@
   (reduce (fn [total current]
          (->> (str/split current #",")
               (map #(str/split % #"-"))
-              (map get-range)
+              (map inclusive-range)
               (fully-contians?)
               (get {false 0 true 1})
               (+ total))) 0 input))
