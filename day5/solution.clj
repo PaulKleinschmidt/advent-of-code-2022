@@ -12,7 +12,7 @@
         empty-map {"1" [] "2" [] "3" [] "4" [] "5" [] "6" [] "7" [] "8" [] "9" []}]
     (->> (butlast stacks) 
          (vec)
-         ;; need to reverse stacks to ensure crates on top are at the end of vector
+         ;; need to reverse stacks to ensure crates on top are at the end of the list
          (reverse)
          (map (fn [x] (as-> x $
                         (str/split $ #" ")
@@ -35,6 +35,8 @@
   (when (re-find #"\A-?\d+" s)
     (Integer/parseInt s)))
 
+;; Translate instructions line to list containing the "steps"
+;; Example: "move 2 from 4 to 6" -> [2 4 6]
 (defn parse-instructions-line [str]
   (as-> str $
     (str/split $ #" ")
