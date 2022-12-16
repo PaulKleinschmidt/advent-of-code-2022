@@ -7,14 +7,16 @@
 (def initial-stacks (first input))
 (def instructions (last input))
 
-(defn create-initial-map []
+(defn create-initial-crate-map []
   (let [stacks (str/split initial-stacks #"\n")
         empty-map {"1" [] "2" [] "3" [] "4" [] "5" [] "6" [] "7" [] "8" [] "9" []}]
-    (->> (vec (butlast stacks)) 
+    (->> (butlast stacks) 
+         (vec)
+         ;; need to reverse stacks to ensure crates on top are at the end of vector
          (reverse)
          (map (fn [x] (as-> x $
                         (str/split $ #" ")
-                        (reduce-kv (fn [total i current]
+                        (reduce-kv (fn [crate-map i current]
                                      (if (not (= current ""))
                                        (let [crate-pos (->> (subvec $ 0 i)
                                                             (map #(if (= % "") 0.25 1))
@@ -22,9 +24,9 @@
                                                             (Math/round)
                                                             (str))
                                              crate-val (subs current 1 2)
-                                             existing-crates (get total crate-pos)]
-                                         (assoc total crate-pos (conj existing-crates crate-val)))
-                                       total)) empty-map $))))
+                                             existing-crates (get crate-map crate-pos)]
+                                         (assoc crate-map crate-pos (conj existing-crates crate-val)))
+                                       crate-map)) empty-map $))))
          (reduce (fn [total current]
                    (merge-with into total current)) {})
          (into (sorted-map)))))
@@ -33,18 +35,18 @@
   (when (re-find #"\A-?\d+" s)
     (Integer/parseInt s)))
 
-(defn get-instructions-line [str]
+(defn parse-instructions-line [str]
   (as-> str $
     (str/split $ #" ")
     (filter #(parse-int %) $)
     (vec $)))
 
-(defn part-1
-  []
-  (let [initial-map (create-initial-map)
+(defn operate-crane
+  [keep-order]
+  (let [initial-map (create-initial-crate-map)
         instructions-list (str/split instructions #"\n")]
     (->> instructions-list
-         (map #(get-instructions-line %))
+         (map #(parse-instructions-line %))
          (reduce (fn [acc current]
                    (let [amount (parse-int (first current))
                          source-key (second current)
@@ -55,7 +57,8 @@
                                           (get acc))]
                      (assoc acc destination-key (->> source
                                                      (take-last amount)
-                                                     (reverse)
+                                                     ;; For part 2, retain order of crates when moving
+                                                     (#(if keep-order % (reverse %)))
                                                      (conj destination)
                                                      (flatten)
                                                      (vec))
@@ -65,5 +68,8 @@
          (str/join))))
 
 (comment 
-  (part-1) ;;GFTNRBZPF
+  ;; Part 1
+  (operate-crane false) ;; GFTNRBZPF
+  ;; Part 2
+  (operate-crane true) ;; VRQWPDSGP
   )
