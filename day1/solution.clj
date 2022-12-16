@@ -16,8 +16,7 @@
 (defn part-2 []
   (->> totals
        sort
-       reverse
-       (take 3)
+       (take-last 3)
        (apply +)))
 
 

@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]))
 
 (defn parse-file
-  [file ]
-  (as-> (slurp file) $
-    (str/split $ #"\n")))
+  ([file] (parse-file file #"\n"))
+  ([file delimiter]
+   (as-> (slurp file) $
+     (str/split $ delimiter))))
